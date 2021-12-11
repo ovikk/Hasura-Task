@@ -13,16 +13,16 @@ services:
       - ./hasura/migrations:/hasura-migrations
       - ./hasura/metadata:/hasura-metadata
 
-  frontend:
+  nextjs:
     build:
       context: ./frontend
     command: yarn dev
     depends_on:
       - backend
     volumes:
-      - ./frontend:/frontend-app
-      - ./frontend/package.json:/frontend-app/package.json
-      - ./frontend/yarn.lock:/frontend-app/yarn.lock
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
+      - /usr/src/app/.next
     ports:
       - "3000:3000"
 
