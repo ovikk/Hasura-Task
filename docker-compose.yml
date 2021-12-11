@@ -1,0 +1,36 @@
+version: "3"
+services:
+  backend:
+    build:
+      context: ./hasura
+    depends_on:
+      - db
+    env_file: ./hasura/.env
+    ports:
+      - 8080:8080
+    volumes:
+      - ./hasura:/backend-app
+      - ./hasura/migrations:/hasura-migrations
+      - ./hasura/metadata:/hasura-metadata
+
+  frontend:
+    build:
+      context: ./frontend
+    command: yarn dev
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/frontend-app
+      - ./frontend/package.json:/frontend-app/package.json
+      - ./frontend/yarn.lock:/frontend-app/yarn.lock
+    ports:
+      - "3000:3000"
+
+  db:
+    image: postgres:11.3-alpine
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+volumes:
+  db_data:
